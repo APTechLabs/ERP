@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Records</title>
+</head>
+<body>
+  <h2>All Students</h2>
+  <a href="/admission">+ New Admission</a>
+  <table border="1" cellpadding="8">
+    <tr>
+      <th>ID</th><th>Name</th><th>DOB</th><th>Email</th><th>Phone</th><th>Course</th>
+    </tr>
+    {% for s in students %}
+    <tr>
+      <td>{{ s.student_id }}</td>
+      <td>{{ s.name }}</td>
+      <td>{{ s.dob }}</td>
+      <td>{{ s.email }}</td>
+      <td>{{ s.phone }}</td>
+      <td>{{ s.course }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome, {{ student.full_name }}</h2>
+        <p><strong>Unique ID:</strong> {{ student.user_id }}</p>
+        <p><strong>DOB:</strong> {{ student.dob }}</p>
+        <p><strong>Email:</strong> {{ student.email }}</p>
+        <p><strong>Phone:</strong> {{ student.phone }}</p>
+        <p><strong>Address:</strong> {{ student.address }}</p>
+        <a href="/logout">Logout</a>
+    </div>
+</body>
+</html>

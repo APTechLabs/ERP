@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ERP Register</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Student Registration</h2>
+        <form method="POST" action="/register">
+            <label>Full Name:</label>
+            <input type="text" name="full_name" required>
+            <label>Date of Birth:</label>
+            <input type="date" name="dob" required>
+            <label>Email:</label>
+            <input type="email" name="email" required>
+            <label>Phone:</label>
+            <input type="text" name="phone" required>
+            <label>Address:</label>
+            <input type="text" name="address" required>
+            <label>Password:</label>
+            <input type="password" name="password" required>
+            <button type="submit">Register</button>
+        </form>
+        <p>Already have ID? <a href="/login">Login Here</a></p>
+    </div>
+</body>
+</html>
