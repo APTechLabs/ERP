@@ -40,15 +40,28 @@ def login():
 
         cursor.execute("SELECT * FROM users WHERE user_id=%s", (user_id,))
         user = cursor.fetchone()
-        if user and bcrypt.check_password_hash(user["password"], password):
-            session["user_id"] = user_id
-            session["role"] = user["role"]
-            if user["role"] == "student":
-                return redirect("/student_dashboard")
-            else:
+
+        if user:
+            # If admin has no password set yet
+            if user_id == "aditya" and (user["password"] is None or user["password"] == ""):
+                hashed_pw = bcrypt.generate_password_hash(password).decode('utf-8')
+                cursor.execute("UPDATE users SET password=%s WHERE user_id=%s", (hashed_pw, "aditya"))
+                db.commit()
+                session["user_id"] = "aditya"
+                session["role"] = "admin"
                 return redirect("/admin_dashboard")
+
+            # Normal login check
+            if bcrypt.check_password_hash(user["password"], password):
+                session["user_id"] = user_id
+                session["role"] = user["role"]
+                if user["role"] == "student":
+                    return redirect("/student_dashboard")
+                else:
+                    return redirect("/admin_dashboard")
         return "Invalid ID or password"
     return render_template("login.html")
+
 
 # Register new student
 @app.route("/register", methods=["GET","POST"])
@@ -88,11 +101,15 @@ def student_dashboard():
 # Admin dashboard
 @app.route("/admin_dashboard")
 def admin_dashboard():
-    if "user_id" in session and session["role"]=="admin":
-        cursor.execute("SELECT * FROM students")
-        students = cursor.fetchall()
-        return render_template("admin_dashboard.html", students=students)
-    return redirect("/login")
+    if "user_id" not in session or session["role"] != "admin":
+        return redirect("/login")
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT user_id, full_name, email, phone FROM students")
+    students = cursor.fetchall()
+    cursor.close()
+
+    return render_template("admin_dashboard.html", students=students)
 
 # Logout
 @app.route("/logout")
