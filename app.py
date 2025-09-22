@@ -42,15 +42,6 @@ def login():
         user = cursor.fetchone()
 
         if user:
-            # If admin has no password set yet
-            if user_id == "aditya" and (user["password"] is None or user["password"] == ""):
-                hashed_pw = bcrypt.generate_password_hash(password).decode('utf-8')
-                cursor.execute("UPDATE users SET password=%s WHERE user_id=%s", (hashed_pw, "aditya"))
-                db.commit()
-                session["user_id"] = "aditya"
-                session["role"] = "admin"
-                return redirect("/admin_dashboard")
-
             # Normal login check
             if bcrypt.check_password_hash(user["password"], password):
                 session["user_id"] = user_id
