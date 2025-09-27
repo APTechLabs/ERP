@@ -24,8 +24,8 @@ CREATE TABLE students (
 CREATE TABLE fees (
     fee_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id VARCHAR(9) NOT NULL,
-    amount DECIMAL(10,2) NOT NULL,
-    status ENUM('paid','unpaid') DEFAULT 'unpaid',
+    total DECIMAL(10,2) NOT NULL,
+    paid DECIMAL(10,2) DEFAULT 0,
     due_date DATE,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
@@ -40,12 +40,38 @@ CREATE TABLE hostel (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
--- Exams
+-- Exams (Schedule + Results together)
 CREATE TABLE exams (
     exam_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id VARCHAR(9) NOT NULL,
     subject VARCHAR(50) NOT NULL,
-    marks INT,
     exam_date DATE,
+    time TIME,
+    marks INT,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- Notices (visible to all students)
+CREATE TABLE notices (
+    notice_id INT AUTO_INCREMENT PRIMARY KEY,
+    message TEXT NOT NULL,
+    date DATE DEFAULT (CURRENT_DATE)
+);
+
+-- Attendance
+CREATE TABLE attendance (
+    attendance_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id VARCHAR(9) NOT NULL,
+    date DATE NOT NULL,
+    status ENUM('present','absent') NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- Leave Notes
+CREATE TABLE leave_notes (
+    note_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id VARCHAR(9) NOT NULL,
+    text TEXT NOT NULL,
+    date DATE DEFAULT (CURRENT_DATE),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
