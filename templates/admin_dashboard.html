@@ -2,19 +2,128 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard</title>  
+    <title>Admin Dashboard</title>
     <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            margin: 40px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .actions a {
+            text-decoration: none;
+            background: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+
+        .actions a.logout {
+            background: #e74c3c;
+        }
+
+        .actions a:hover {
+            opacity: 0.8;
+        }
+
+        .search-box {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .search-box input {
+            width: 60%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #4CAF50;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f1f1f1;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 5px;
+            color: #fff;
+        }
+
+        .edit-btn {
+            background: #3498db;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            margin-left: 5px;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h2>Admin Dashboard</h2>
-        <a href="/register">Add New Student</a>
-        <table border="1" width="100%">
+        <div class="actions">
+            <a href="/register">Add New Student</a>
+            <a href="/logout" class="logout">Logout</a>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search by Name or ID...">
+        </div>
+
+        <table id="studentsTable">
             <tr>
                 <th>Unique ID</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
+                <th>Action</th>
             </tr>
             {% for student in students %}
             <tr>
@@ -22,10 +131,34 @@
                 <td>{{ student.full_name }}</td>
                 <td>{{ student.email }}</td>
                 <td>{{ student.phone }}</td>
+                <td>
+                    <a href="/edit_student/{{ student.user_id }}" class="btn edit-btn">Edit</a>
+                    <a href="/delete_student/{{ student.user_id }}" class="btn delete-btn">Delete</a>
+                </td>
             </tr>
             {% endfor %}
         </table>
-        <a href="/logout">Logout</a>
     </div>
+
+    <script>
+        const searchInput = document.getElementById("searchInput");
+        const table = document.getElementById("studentsTable");
+        const rows = table.getElementsByTagName("tr");
+
+        searchInput.addEventListener("keyup", function () {
+            const filter = searchInput.value.toLowerCase();
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName("td");
+                let match = false;
+                for (let j = 0; j < cells.length - 1; j++) {
+                    if (cells[j].innerText.toLowerCase().includes(filter)) {
+                        match = true;
+                        break;
+                    }
+                }
+                rows[i].style.display = match ? "" : "none";
+            }
+        });
+    </script>
 </body>
 </html>
